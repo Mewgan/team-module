@@ -134,7 +134,6 @@ class TeamRole extends Model implements \JsonSerializable
         $this->teams[] = $team;
     }
 
-
     /**
      * Specify data which should be serialized to JSON
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php

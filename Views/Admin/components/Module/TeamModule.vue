@@ -1,5 +1,5 @@
 <style>
-    .module-title{
+    .module-title {
         padding: 10px;
         background: #f2f2f2;
     }
@@ -47,10 +47,12 @@
                 </div>
             </div>
             <h5 class="module-title">Choix du template :</h5>
-            <template-editor :id="line" :templates="templates" :template="content.template" label="Template du contenu"></template-editor>
+            <template-editor :id="line" :templates="templates" :template="content.template"
+                             label="Template du contenu"></template-editor>
             <h5 class="module-title">Configuration avancé :</h5>
             <select2 @updateValue="updateRoles"
-                     :contents="roles" :id="'roles-' + line + '-' + i" val_index="id" index="name" label="Choisir les rôles à affciher ou laisser vide pour tout afficher"
+                     :contents="roles" :id="'roles-' + line + '-' + i" val_index="id" index="name"
+                     label="Choisir les rôles à affciher ou laisser vide pour tout afficher"
                      :val="content_data.roles"></select2>
         </form>
 
@@ -67,15 +69,19 @@
 
     import {mapActions} from 'vuex'
     import {template_api} from '@front/api'
-    import {team_role_api} from '../api'
+    import {team_role_api} from '../../api'
 
     import module_mixin from '@front/mixin/module'
 
     export default{
         name: 'price',
         components: {
-            TemplateEditor: resolve => { require(['@front/components/Helper/TemplateEditor.vue'], resolve) },
-            Select2: resolve => { require(['@front/components/Helper/Select2.vue'], resolve) }
+            TemplateEditor: resolve => {
+                require(['@front/components/Helper/TemplateEditor.vue'], resolve)
+            },
+            Select2: resolve => {
+                require(['@front/components/Helper/Select2.vue'], resolve)
+            }
         },
         mixins: [module_mixin],
         props: {
