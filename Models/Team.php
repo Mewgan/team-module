@@ -36,7 +36,7 @@ class Team extends Model implements \JsonSerializable
      */
     protected $order = 0;
     /**
-     * @Column(type="text",nullable=true)
+     * @Column(type="text", nullable=true)
      */
     protected $description;
     /**
