@@ -2,8 +2,18 @@
     .team-item{
         margin: 10px 0 !important;
     }
+    .team-item .list-header .card-head{
+        display: inline-block;
+    }
+    .team-item .list-header .card-head .tools{
+        padding: 5px 24px;
+    }
+    .team-item .list-header .delete-container{
+        padding-top: 14px;
+    }
     .team-item .drag-arrows{
         margin-right: 15px;
+        cursor: move;
     }
     .team-item .member-photo{
         display: initial;
@@ -45,8 +55,8 @@
 
 <template>
     <li class="team-item tile card panel" :data-name="member.full_name">
-        <div>
-            <div class="card-head collapsed" data-toggle="collapse" :data-parent="accordion_parent" :data-target="'#accordion-' + index">
+        <div class="list-header">
+            <div class="card-head col-md-11 collapsed" data-toggle="collapse" :data-parent="accordion_parent" :data-target="'#accordion-' + index">
                 <header>
                     <div class="tile-icon member-photo">
                         <i class="fa drag-arrows fa-arrows"></i>
@@ -55,10 +65,12 @@
                     <span> {{member.full_name}}</span>
                 </header>
                 <div class="tools">
-                    <a class="btn btn-icon-toggle"><i class="fa fa-pencil"></i></a>
+                    <a class="btn btn-info"><i class="fa fa-pencil"></i></a>
                 </div>
             </div>
-            <a data-toggle="modal" :data-target="'#deleteMember' + index" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+            <div class="delete-container col-md-1">
+                <a data-toggle="modal" :data-target="'#deleteMember' + index" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+            </div>
         </div>
         <div :id="'accordion-' + index" class="accordion collapse">
             <div class="col-md-12">
@@ -132,7 +144,8 @@
     </li>
 </template>
 
-<script>
+<script type="text/babel">
+    import {mapActions} from 'vuex'
     export default{
         name: 'member',
         components: {
@@ -157,7 +170,7 @@
                         full_name: '',
                         description: '',
                         gender: 0,
-                        order: 0,
+                        position: 0,
                         roles: [],
                         photo: {
                             path: '/public/media/user/default-photo.png',
@@ -180,15 +193,20 @@
         },
         computed: {
             member_roles (){
-                return [];
+                let ids = [];
+                this.member.roles.forEach((role) => {
+                    ids.push(role.id);
+                })
+                return ids;
             }
         },
         methods: {
+            ...mapActions(['destroy']),
             updateContent(val) {
-
+                this.member.description = val;
             },
             updateRoles(val) {
-
+                this.member.roles = val;
             }
         }
     }

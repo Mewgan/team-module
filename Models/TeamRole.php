@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping;
  * @package Jet\Models
  * @Entity(repositoryClass="Jet\Modules\Team\Models\TeamRoleRepository")
  * @Table(name="team_roles")
+ * @HasLifecycleCallbacks
  */
 class TeamRole extends Model implements \JsonSerializable
 {
@@ -133,6 +134,7 @@ class TeamRole extends Model implements \JsonSerializable
         $team->addRole($this);
         $this->teams[] = $team;
     }
+
 
     /**
      * Specify data which should be serialized to JSON

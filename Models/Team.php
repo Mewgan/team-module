@@ -34,7 +34,7 @@ class Team extends Model implements \JsonSerializable
     /**
      * @Column(type="smallint")
      */
-    protected $order = 0;
+    protected $position = 0;
     /**
      * @Column(type="text", nullable=true)
      */
@@ -121,17 +121,17 @@ class Team extends Model implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getOrder()
+    public function getPosition()
     {
-        return $this->order;
+        return $this->position;
     }
 
     /**
-     * @param mixed $order
+     * @param mixed $position
      */
-    public function setOrder($order)
+    public function setPosition($position)
     {
-        $this->order = $order;
+        $this->position = $position;
     }
 
     /**
@@ -189,6 +189,16 @@ class Team extends Model implements \JsonSerializable
     {
         $this->roles[] = $role;
     }
+
+    /**
+     * @param TeamRole $role
+     */
+    public function removeRole(TeamRole $role)
+    {
+        if ($this->roles->contains($role)) $this->roles->removeElement($role);
+
+    }
+
 
     /**
      * @return Website
@@ -267,7 +277,7 @@ class Team extends Model implements \JsonSerializable
             'gender' => $this->getGender(),
             'photo' => $this->getPhoto(),
             'description' => $this->getDescription(),
-            'order' => $this->getOrder(),
+            'position' => $this->getPosition(),
             'website' => [
                 'id' => $this->getWebsite()->getId(),
                 'domain' => $this->getWebsite()->getDomain(),

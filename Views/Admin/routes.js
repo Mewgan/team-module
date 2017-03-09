@@ -3,7 +3,7 @@ export var routes = [
         path: 'team-list',
         name: 'module:team',
         component: resolve => {
-            require(['./components/TeamList.vue'], resolve)
+            require(['./components/Team.vue'], resolve)
         }
     },
 ];
