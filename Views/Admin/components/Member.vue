@@ -69,7 +69,7 @@
                 </div>
             </div>
             <div class="delete-container col-md-1">
-                <a data-toggle="modal" :data-target="'#deleteMember' + index" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                <a @click="deleteMember" class="btn btn-danger"><i class="fa fa-trash"></i></a>
             </div>
         </div>
         <div :id="'accordion-' + index" class="accordion collapse">
@@ -133,7 +133,7 @@
                             </td>
                             <td class="col-md-9 field-value">
                                 <select2 @updateValue="updateRoles" :contents="roles"
-                                         :id="'roles-select-' + index" index="name" :label="false" :val="member_roles"></select2>
+                                         :id="'roles-select-' + index" index="name" :label="false" :val="member.roles"></select2>
                             </td>
                         </tr>
                         </tbody>
@@ -146,6 +146,8 @@
 
 <script type="text/babel">
     import {mapActions} from 'vuex'
+    import {team_api} from '../api'
+
     export default{
         name: 'member',
         components: {
@@ -191,15 +193,6 @@
 
             }
         },
-        computed: {
-            member_roles (){
-                let ids = [];
-                this.member.roles.forEach((role) => {
-                    ids.push(role.id);
-                })
-                return ids;
-            }
-        },
         methods: {
             ...mapActions(['destroy']),
             updateContent(val) {
@@ -207,7 +200,27 @@
             },
             updateRoles(val) {
                 this.member.roles = val;
+            },
+            deleteMember(){
+                if(this.member.id !== undefined){
+                    this.destroy({
+                        api: team_api.destroy + this.website_id,
+                        ids: [this.member.id]
+                    }).then((response) => {
+                        if (response.data.status == 'success')
+                            this.$emit('memberDeleted', this.member.id);
+                    });
+                }else{
+                    this.$emit('memberDeleted', this.member.id);
+                }
             }
+        },
+        mounted () {
+            let ids = [];
+            this.member.roles.forEach((role, index) => {
+                ids.push(role.id);
+            })
+            this.member.roles = ids;
         }
     }
 </script>

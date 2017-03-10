@@ -206,5 +206,4 @@ class AdminTeamRoleController extends AdminController
         return ['status' => 'error', 'message' => 'Les rôles n\'ont pas pu être supprimés'];
     }
 
-
 }

@@ -81,7 +81,7 @@ class AdminTeamController extends AdminController
                 if (Team::save()) {
                     $response = $this->all($website->getId());
                     return ($response['status'] == 'success')
-                        ? ['status' => 'success', 'message' => 'L\'équipe a bien mis à jour', 'resource' => $response['resource']]
+                        ? ['status' => 'success', 'message' => 'L\'équipe a bien été mis à jour', 'resource' => $response['resource']]
                         : $response;
                 }
                 return ['status' => 'error', 'message' => 'L\'équipe n\'a pas pu être mis à jour'];
@@ -118,12 +118,54 @@ class AdminTeamController extends AdminController
                 $member->setPhoto($photo);
             }
 
-            $roles = TeamRole::findBy(['id' => $value['roles']]);
-            if (!is_null($roles)) $member->setRoles($roles);
+            if(isset($value['roles']) && !empty($value['roles'])) {
+                $roles = TeamRole::findBy(['id' => $value['roles']]);
+                if (!is_null($roles)) $member->setRoles($roles);
+            }else{
+                $member->setRoles([]);
+            }
 
             return true;
         }
         return $response;
+    }
+
+
+    /**
+     * @param TeamRequest $request
+     * @param Auth $auth
+     * @param $website
+     * @return array
+     */
+    public function delete(TeamRequest $request, Auth $auth, $website)
+    {
+        if ($request->method() == 'DELETE' && $request->exists('ids')) {
+            /** @var Website $website */
+            $website = Website::findOneById($website);
+            if (is_null($website)) return ['status' => 'error', 'message' => 'Impossible de trouver le site web'];
+            $data = $website->getData();
+
+            if (!$this->isWebsiteOwner($auth, $website->getId()))
+                return ['status' => 'error', 'message' => 'Vous n\'avez pas les permission pour supprimer ces collaborateurs'];
+
+            $team = Team::repo()->findById($request->get('ids'));
+            $ids = [];
+
+            foreach ($team as $member) {
+                if ($member['website']['id'] != $website->getId()) {
+                    $data = $this->excludeData($data, 'teams', $member['id']);
+                } else
+                    $ids[] = $member['id'];
+            }
+
+            $website->setData($data);
+            Website::watchAndSave($website);
+
+            return (Team::destroy($ids))
+                ? ['status' => 'success', 'message' => 'Le collaborateur a bien été supprimé']
+                : ['status' => 'error', 'message' => 'Erreur lors de la suppression'];
+        }
+        return ['status' => 'error', 'message' => 'Les collaborateur n\'a pas pu être supprimé'];
     }
 
 }

@@ -26,11 +26,11 @@
             </div>
 
             <div class="col-md-4">
-                <team-role-list :website_id="website_id" :roles="roles" @roleDeleted="deleteRole" @roleCreated="addRole"></team-role-list>
+                <team-role-list :website_id="website_id" :roles="roles"></team-role-list>
             </div>
 
             <div class="col-md-8">
-                <team-list :website_id="website_id" :team="team" :roles="roles" @teamUpdated="updateTeam"></team-list>
+                <team-list :website_id="website_id" :team="team" :roles="roles"></team-list>
             </div><!--end .section-body -->
 
         </div>
@@ -48,8 +48,12 @@
     export default
     {
         components: {
-            TeamList: resolve => { require(['./TeamList.vue'], resolve) },
-            TeamRoleList: resolve => { require(['./TeamRoleList.vue'], resolve) },
+            TeamList: resolve => {
+                require(['./TeamList.vue'], resolve)
+            },
+            TeamRoleList: resolve => {
+                require(['./TeamRoleList.vue'], resolve)
+            },
         },
         data () {
             return {
@@ -59,27 +63,18 @@
             }
         },
         methods: {
-            ...mapActions(['read']),
-            addRole(role){
-                this.roles.push(role);
-            },
-            deleteRole(id){
-                let index = this.roles.findIndex((i) => i.id == id);
-                this.roles.splice(index, 1);
-            },
-            updateTeam(team){
-                this.team = team;
-            }
+            ...mapActions(['read'])
         },
         created() {
             this.read({api: team_role_api.all + this.website_id}).then((response) => {
-                if(response.data.resource !== undefined)
+                if (response.data.resource !== undefined)
                     this.roles = response.data.resource;
             });
 
             this.read({api: team_api.all + this.website_id}).then((response) => {
-                if(response.data.resource !== undefined)
+                if (response.data.resource !== undefined) {
                     this.team = response.data.resource;
+                }
             })
         }
     }

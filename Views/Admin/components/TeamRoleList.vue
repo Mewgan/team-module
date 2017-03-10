@@ -140,8 +140,9 @@
                         api: team_role_api.create + this.website_id,
                         value: this.role
                     }).then((response) => {
-                        if (response.data.resource !== undefined)
-                            this.$emit('roleCreated', response.data.resource);
+                        if (response.data.resource !== undefined){
+                            this.roles.push(response.data.resource);
+                        }
                     })
                 }
             },
@@ -151,8 +152,10 @@
                         api: team_role_api.destroy + this.website_id,
                         ids: [this.role.id]
                     }).then((response) => {
-                        if (response.data.status == 'success')
-                            this.$emit('roleDeleted', this.role.id);
+                        if (response.data.status == 'success'){
+                            let index = this.roles.findIndex((i) => i.id == this.role.id);
+                            this.roles.splice(index, 1);
+                        }
                     })
                 }
             }

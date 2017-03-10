@@ -1,7 +1,8 @@
 <template>
-    <div>
-
-    </div>
+    <router-link
+                 :to="{name: 'module:' + content.module.category.slug, params: {website_id: website}}"
+                 class="btn ink-reaction btn-info">Modifier
+    </router-link>
 </template>
 
 <script type="text/babel">

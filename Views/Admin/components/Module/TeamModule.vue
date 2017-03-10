@@ -51,8 +51,8 @@
                              label="Template du contenu"></template-editor>
             <h5 class="module-title">Configuration avancé :</h5>
             <select2 @updateValue="updateRoles"
-                     :contents="roles" :id="'roles-' + line + '-' + i" val_index="id" index="name"
-                     label="Choisir les rôles à affciher ou laisser vide pour tout afficher"
+                     :contents="roles" :id="'roles-' + line" val_index="id" index="name"
+                     label="Choisir les rôles à afficher ou laisser vide pour tout afficher"
                      :val="content_data.roles"></select2>
         </form>
 
@@ -121,15 +121,16 @@
         methods: {
             ...mapActions(['read', 'setResponse']),
             updateRoles(val){
-
+                this.content.data.roles = val;
             }
         },
         created () {
             this.read({api: template_api.get_website_content_layouts + this.website}).then((response) => {
                 this.templates = response.data;
             });
-            this.read({api: team_role_api.list_names + this.website}).then((response) => {
-                this.roles = response.data;
+            this.read({api: team_role_api.all + this.website}).then((response) => {
+                if(response.data.resource !== undefined)
+                    this.roles = response.data.resource;
             });
         },
         mounted(){

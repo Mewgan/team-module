@@ -26,8 +26,7 @@ class TeamRequest extends Request
     {
         return [
             'full_name|gender|position' => 'required',
-            'roles' => 'required',
-            'description|photo' => 'optional',
+            'roles|description|photo' => 'optional',
         ];
     }
 

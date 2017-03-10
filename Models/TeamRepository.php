@@ -18,7 +18,7 @@ class TeamRepository extends EntityRepository
      */
     public function listAll($params = [])
     {
-        $query = TeamRole::queryBuilder();
+        $query = Team::queryBuilder();
 
         $query->select('t')
             ->addSelect('partial r.{id,name}')
@@ -30,9 +30,30 @@ class TeamRepository extends EntityRepository
 
         $query = $this->getQueryWithParams($query, $params);
 
+        if(isset($params['roles']) && !empty($params['roles'])){
+            $query->andWhere($query->expr()->in('r.id', ':roles'))
+                ->setParameter('roles', $params['roles']);
+        }
+
         $query->orderBy('t.position', 'ASC');
 
         return $query->getQuery()->getArrayResult();
+    }
+
+    /**
+     * @param $ids
+     * @return array
+     */
+    public function findById($ids)
+    {
+        $query = Team::queryBuilder()
+            ->select('partial t.{id}')
+            ->addSelect('partial w.{id}')
+            ->from('Jet\Modules\Team\Models\Team', 't')
+            ->leftJoin('t.website', 'w');
+        return $query->where($query->expr()->in('t.id', ':ids'))
+            ->setParameter('ids', $ids)
+            ->getQuery()->getArrayResult();
     }
 
     /**

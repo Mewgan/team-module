@@ -25,7 +25,7 @@
                 <!-- BEGIN RESULT LIST -->
                 <div class="list-results list-results-underlined">
                     <ul class="list list-accordion panel-group" id="team-accordion" data-sortable="true">
-                        <member v-for="(member, key) in team" :key="key" :index="key" :member="member" :roles="roles" :website_id="website_id"></member>
+                        <member v-for="(member, key) in team" @memberDeleted="deleteMember" :key="key" :index="key" :member="member" :roles="roles" :website_id="website_id"></member>
                     </ul>
                     <button data-toggle="modal" @click="addMember"
                             class="btn ink-reaction btn-raised btn-lg btn-info pull-right">
@@ -37,26 +37,6 @@
             </div>
         </div><!--end .section-body -->
 
-
-        <div class="modal fade" id="deleteMemberModal" tabindex="-1" role="dialog" aria-labelledby="simpleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="deleteMemberModalLabel">Suppression</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Êtes-vous sûr de vouloir supprimer ce membre de votre équipe ?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Oui
-                        </button>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div>
     </div>
 
 </template>
@@ -73,7 +53,9 @@
     {
         name: 'team-list',
         components: {
-            Member: resolve => { require(['./Member.vue'], resolve) },
+            Member: resolve => {
+                require(['./Member.vue'], resolve)
+            },
         },
         props: {
             website_id: {
@@ -92,11 +74,6 @@
                 }
             }
         },
-        data () {
-            return {
-                selected_items: []
-            }
-        },
         methods: {
             ...mapActions(['update']),
             addMember(){
@@ -112,6 +89,10 @@
                     }
                 });
             },
+            deleteMember(id){
+                let index = this.team.findIndex((i) => i.id == id);
+                this.team.splice(index, 1);
+            },
             save(){
                 this.update({
                     api: team_api.update_or_create + this.website_id,
@@ -119,8 +100,12 @@
                         team: this.team
                     }
                 }).then((response) => {
-                    if(response.data.resource !== undefined)
-                        this.$emit('teamUpdated', response.data.resource);
+                    if (response.data.resource !== undefined) {
+                        response.data.resource.forEach((member) => {
+                            let index = this.team.findIndex((i) => i.position == member.position);
+                            this.team[index]['id'] = member.id;
+                        })
+                    }
                 });
             }
         },
