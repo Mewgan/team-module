@@ -75,7 +75,7 @@
                         <h4 class="modal-title" id="deleteFormModalLabel">Suppression</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Supprimer le rôle ?</p>
+                        <p>Êtes-vous sûr de vouloir supprimer le rôle ?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>

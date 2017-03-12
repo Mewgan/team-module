@@ -25,7 +25,7 @@
                 <!-- BEGIN RESULT LIST -->
                 <div class="list-results list-results-underlined">
                     <ul class="list list-accordion panel-group" id="team-accordion" data-sortable="true">
-                        <member v-for="(member, key) in team" @memberDeleted="deleteMember" :key="key" :index="key" :member="member" :roles="roles" :website_id="website_id"></member>
+                        <member v-for="(member, key) in team" @memberDeleted="deleteMember" :key="key" :id="key" :member="member" :roles="roles" :website_id="website_id"></member>
                     </ul>
                     <button data-toggle="modal" @click="addMember"
                             class="btn ink-reaction btn-raised btn-lg btn-info pull-right">
@@ -55,7 +55,7 @@
         components: {
             Member: resolve => {
                 require(['./Member.vue'], resolve)
-            },
+            }
         },
         props: {
             website_id: {

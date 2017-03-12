@@ -54,9 +54,9 @@
 </style>
 
 <template>
-    <li class="team-item tile card panel" :data-name="member.full_name">
+    <div class="team-item tile card panel" :data-name="member.full_name">
         <div class="list-header">
-            <div class="card-head col-md-11 collapsed" data-toggle="collapse" :data-parent="accordion_parent" :data-target="'#accordion-' + index">
+            <div class="card-head col-md-11 collapsed" data-toggle="collapse" :data-parent="accordion_parent" :data-target="'#accordion-' + id">
                 <header>
                     <div class="tile-icon member-photo">
                         <i class="fa drag-arrows fa-arrows"></i>
@@ -72,7 +72,7 @@
                 <a @click="deleteMember" class="btn btn-danger"><i class="fa fa-trash"></i></a>
             </div>
         </div>
-        <div :id="'accordion-' + index" class="accordion collapse">
+        <div :id="'accordion-' + id" class="accordion collapse">
             <div class="col-md-12">
                 <form class="form">
                     <table class="table table-banded no-margin">
@@ -96,7 +96,7 @@
                                 <div class="member-photo-container">
                                     <img v-img="member.photo.path" :alt="member.photo.alt">
                                 </div>
-                                <media :id="'member-' + index" :target="member" :input_target="member.photo" :dir="'/public/media/sites/' + website_id + '/'"></media>
+                                <media :id="'member-' + id" :target="member" :input_target="member.photo" :dir="'/public/media/sites/' + website_id + '/'"></media>
                             </td>
                         </tr>
                         <tr>
@@ -106,7 +106,7 @@
                             <td class="col-md-9 field-value">
                                 <div class="from-group">
                                     <tinymce-editor @updateContent="updateContent" :height="200"
-                                                    :id="'member-description-' + index"
+                                                    :id="'member-description-' + id"
                                                     :dir="'/public/media/sites/' + website_id + '/'"
                                                     :value="member.description"></tinymce-editor>
                                 </div>
@@ -133,7 +133,7 @@
                             </td>
                             <td class="col-md-9 field-value">
                                 <select2 @updateValue="updateRoles" :contents="roles"
-                                         :id="'roles-select-' + index" index="name" :label="false" :val="member.roles"></select2>
+                                         :id="'roles-select-' + id" index="name" :label="false" :val="member.roles"></select2>
                             </td>
                         </tr>
                         </tbody>
@@ -141,7 +141,7 @@
                 </form>
             </div>
         </div>
-    </li>
+    </div>
 </template>
 
 <script type="text/babel">
@@ -159,7 +159,7 @@
             accordion_parent: {
                 default: '#team-accordion'
             },
-            index: {
+            id: {
                 required: true
             },
             website_id: {
@@ -217,9 +217,9 @@
         },
         mounted () {
             let ids = [];
-            this.member.roles.forEach((role, index) => {
+            this.member.roles.forEach((role) => {
                 ids.push(role.id);
-            })
+            });
             this.member.roles = ids;
         }
     }
