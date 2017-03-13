@@ -146,7 +146,7 @@ class AdminTeamController extends AdminController
             $data = $website->getData();
 
             if (!$this->isWebsiteOwner($auth, $website->getId()))
-                return ['status' => 'error', 'message' => 'Vous n\'avez pas les permission pour supprimer ces collaborateurs'];
+                return ['status' => 'error', 'message' => 'Vous n\'avez pas les permissions pour supprimer ces collaborateurs'];
 
             $team = Team::repo()->findById($request->get('ids'));
             $ids = [];
