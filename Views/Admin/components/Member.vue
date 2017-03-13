@@ -54,7 +54,7 @@
 </style>
 
 <template>
-    <div class="team-item tile card panel" :data-name="member.full_name">
+    <li class="team-item tile card panel" :data-name="member.full_name">
         <div class="list-header">
             <div class="card-head col-md-11 collapsed" data-toggle="collapse" :data-parent="accordion_parent" :data-target="'#accordion-' + id">
                 <header>
@@ -141,7 +141,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </li>
 </template>
 
 <script type="text/babel">
@@ -186,11 +186,6 @@
                 default: () => {
                     return []
                 }
-            }
-        },
-        data(){
-            return{
-
             }
         },
         methods: {

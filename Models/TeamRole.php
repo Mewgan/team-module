@@ -38,6 +38,14 @@ class TeamRole extends Model implements \JsonSerializable
      * @ManyToMany(targetEntity="Team", mappedBy="roles")
      */
     protected $teams;
+    /**
+     * @Column(type="datetime")
+     */
+    protected $created_at;
+    /**
+     * @Column(type="datetime", nullable=true)
+     */
+    protected $updated_at;
 
     /**
      * TeamRole constructor.
@@ -137,6 +145,54 @@ class TeamRole extends Model implements \JsonSerializable
 
 
     /**
+     * @return mixed
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * @param mixed $created_at
+     */
+    public function setCreatedAt(\DateTime $created_at)
+    {
+        $this->created_at = $created_at;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updated_at;
+    }
+
+    /**
+     * @param mixed $updated_at
+     */
+    public function setUpdatedAt(\DateTime $updated_at)
+    {
+        $this->updated_at = $updated_at;
+    }
+
+    /**
+     * @PrePersist
+     */
+    public function onPrePersist(){
+        $this->setCreatedAt(new \DateTime('now'));
+        $this->setUpdatedAt(new \DateTime('now'));
+    }
+    /**
+     * @PreUpdate
+     */
+    public function onPreUpdate(){
+        $this->setUpdatedAt(new \DateTime('now'));
+    }
+
+
+
+    /**
      * Specify data which should be serialized to JSON
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,
@@ -149,7 +205,9 @@ class TeamRole extends Model implements \JsonSerializable
             'id' => $this->getId(),
             'name' => $this->getName(),
             'slug' => $this->getSlug(),
-            'teams' => $this->getTeams()
+            'teams' => $this->getTeams(),
+            'created_at' => $this->getCreatedAt(),
+            'updated_at' => $this->getUpdatedAt()
         ];
     }
 }

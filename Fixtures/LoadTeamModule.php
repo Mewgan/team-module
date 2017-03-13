@@ -11,7 +11,7 @@ class LoadTeamModule extends AbstractFixture implements DependentFixtureInterfac
     use LoadFixture;
 
     protected $data = [
-        'module_price' => [
+        'module_team' => [
             'name' => 'Équipe',
             'slug' => 'team',
             'callback' => 'Jet\Modules\Team\Controllers\FrontTeamController@show',
