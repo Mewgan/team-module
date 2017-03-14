@@ -84,7 +84,7 @@
                     position: this.team.length,
                     roles: [],
                     photo: {
-                        path: '/public/media/user/default-photo.png',
+                        path: '',
                         alt: ''
                     }
                 });
