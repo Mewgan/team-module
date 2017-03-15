@@ -96,7 +96,7 @@
                                 <div class="member-photo-container">
                                     <img v-img="member.photo.path" :alt="member.photo.alt">
                                 </div>
-                                <media :id="'member-' + id" :target="member" :input_target="member.photo" :dir="website_dir"></media>
+                                <media :id="'member-' + id" :target="member" :input_target="member.photo"></media>
                             </td>
                         </tr>
                         <tr>
@@ -107,7 +107,6 @@
                                 <div class="from-group">
                                     <tinymce-editor @updateContent="updateContent" :height="200"
                                                     :id="'member-description-' + id"
-                                                    :dir="website_dir"
                                                     :value="member.description"></tinymce-editor>
                                 </div>
                             </td>
@@ -146,7 +145,6 @@
 
 <script type="text/babel">
 
-    import {dropzone_mixin} from '@front/mixin/dropzone'
     import {mapActions} from 'vuex'
     import {team_api} from '../api'
 
@@ -157,7 +155,6 @@
             TinymceEditor: resolve => { require(['@front/components/Helper/TinymceEditor.vue'], resolve) },
             Select2: resolve => { require(['@front/components/Helper/Select2.vue'], resolve) }
         },
-        mixins: [dropzone_mixin],
         props: {
             accordion_parent: {
                 default: '#team-accordion'
