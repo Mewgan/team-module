@@ -88,7 +88,7 @@ class AdminTeamRoleController extends AdminController
             $website = Website::findOneById($website);
             if (is_null($website)) return ['status' => 'error', 'message' => 'Impossible de trouver le site web'];
 
-            if (TeamRole::where('name', $name)->where('website', $website)->count() > 0)
+            if (TeamRole::where('id', '!=', $id)->where('name', $name)->where('website', $website)->count() > 0)
                 return ['status' => 'error', 'message' => 'Le rôle existe déjà'];
 
             /** @var TeamRole $role */
@@ -146,7 +146,7 @@ class AdminTeamRoleController extends AdminController
                     $new_member->setPhoto($member->getPhoto());
                     $new_member->setDescription($member->getDescription());
                     $new_member->setGender($member->getGender());
-                    $new_member->setOrder($member->getOrder());
+                    $new_member->setPosition($member->getPosition());
                     $new_member->removeRole($old_role);
                     $new_member->addRole($role);
                     $new_member->setWebsite($website);

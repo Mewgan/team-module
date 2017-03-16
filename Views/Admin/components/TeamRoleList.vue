@@ -113,8 +113,7 @@
             return {
                 role: {
                     name: ''
-                },
-                selected_items: []
+                }
             }
         },
         methods: {
@@ -134,6 +133,8 @@
                     this.update({
                         api: team_role_api.update + this.role.id + '/' + this.website_id,
                         value: this.role
+                    }).then(() => {
+                        this.$emit('reloadTeam');
                     })
                 } else {
                     this.create({

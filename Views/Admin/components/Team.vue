@@ -26,11 +26,11 @@
             </div>
 
             <div class="col-md-4">
-                <team-role-list :website_id="website_id" :roles="roles"></team-role-list>
+                <team-role-list :website_id="website_id" :roles="roles" @reloadTeam="reloadTeam"></team-role-list>
             </div>
 
             <div class="col-md-8">
-                <team-list :website_id="website_id" :team="team" :roles="roles"></team-list>
+                <team-list :website_id="website_id" :team="team" :roles="roles" :reload_roles="reload_roles"></team-list>
             </div><!--end .section-body -->
 
         </div>
@@ -59,23 +59,32 @@
             return {
                 website_id: this.$route.params.website_id,
                 team: [],
-                roles: []
+                roles: [],
+                reload_roles: false
             }
         },
         methods: {
-            ...mapActions(['read'])
+            ...mapActions(['read']),
+            reloadTeam(){
+                this.reload_roles = !this.reload_roles;
+            },
+            loadTeam(){
+                this.read({api: team_api.all + this.website_id}).then((response) => {
+                    if (response.data.resource !== undefined) {
+                        this.team = response.data.resource;
+                    }
+                })
+            },
+            loadRoles(){
+                this.read({api: team_role_api.all + this.website_id}).then((response) => {
+                    if (response.data.resource !== undefined)
+                        this.roles = response.data.resource;
+                });
+            }
         },
         created() {
-            this.read({api: team_role_api.all + this.website_id}).then((response) => {
-                if (response.data.resource !== undefined)
-                    this.roles = response.data.resource;
-            });
-
-            this.read({api: team_api.all + this.website_id}).then((response) => {
-                if (response.data.resource !== undefined) {
-                    this.team = response.data.resource;
-                }
-            })
+            this.loadRoles();
+            this.loadTeam();
         }
     }
 </script>

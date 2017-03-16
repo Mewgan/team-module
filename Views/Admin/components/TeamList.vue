@@ -9,6 +9,7 @@
         vertical-align: top;
         width: 5%;
     }
+
 </style>
 
 <template>
@@ -25,7 +26,9 @@
                 <!-- BEGIN RESULT LIST -->
                 <div class="list-results list-results-underlined">
                     <ul class="list list-accordion panel-group" id="team-accordion" data-sortable="true">
-                        <member v-for="(member, key) in team" @memberDeleted="deleteMember" :key="key" :id="key" :member="member" :roles="roles" :website_id="website_id"></member>
+                        <member v-for="(member, key) in team" @memberDeleted="deleteMember" :key="key"
+                                :reload_roles="reload_roles" :id="key" :member="member" :roles="roles"
+                                :website_id="website_id"></member>
                     </ul>
                     <button data-toggle="modal" @click="addMember"
                             class="btn ink-reaction btn-raised btn-lg btn-info pull-right">
@@ -72,12 +75,17 @@
                 default: () => {
                     return []
                 }
+            },
+            reload_roles: {
+                type: Boolean,
+                default: false
             }
         },
         methods: {
             ...mapActions(['update']),
             addMember(){
                 this.team.push({
+                    id: 'create-' + this.team.length,
                     full_name: 'Membre ' + this.team.length,
                     description: '',
                     gender: 0,
@@ -111,7 +119,7 @@
         },
         mounted () {
             let o = this;
-            $('[data-sortable="true"]').sortable({
+            $('#team-accordion').sortable({
                 placeholder: "ui-state-highlight",
                 delay: 100,
                 start: function (e, ui) {
@@ -120,8 +128,8 @@
                 stop: function (event, ui) {
                     let new_postions = [];
                     $('#' + ui.item[0].parentNode.id + ' > li').each((index, li) => {
-                        let name = $(li).attr('data-name');
-                        let i = o.team.findIndex((i) => i.full_name == name);
+                        let id = $(li).attr('data-id');
+                        let i = o.team.findIndex((i) => i.id == id);
                         new_postions[i] = index;
                     });
                     new_postions.forEach((element, index) => {

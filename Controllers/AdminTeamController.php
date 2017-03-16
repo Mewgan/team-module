@@ -57,7 +57,7 @@ class AdminTeamController extends AdminController
 
                 foreach ($team as $value) {
 
-                    $member = (isset($value['id']) && !empty($value['id']))
+                    $member = (isset($value['id']) && !empty($value['id']) && substr($value['id'], 0, 6) != "create")
                         ? Team::findOneById($value['id'])
                         : new Team();
 
@@ -75,7 +75,6 @@ class AdminTeamController extends AdminController
                     $response = $this->updateFields($request, $member, $website, $value);
                     if (is_array($response)) return $response;
 
-                    Team::watch($member);
                 }
 
                 if (Team::save()) {
@@ -125,6 +124,8 @@ class AdminTeamController extends AdminController
                 $member->setRoles([]);
             }
 
+            Team::watch($member);
+
             return true;
         }
         return $response;
@@ -165,7 +166,7 @@ class AdminTeamController extends AdminController
                 ? ['status' => 'success', 'message' => 'Le collaborateur a bien été supprimé']
                 : ['status' => 'error', 'message' => 'Erreur lors de la suppression'];
         }
-        return ['status' => 'error', 'message' => 'Les collaborateur n\'a pas pu être supprimé'];
+        return ['status' => 'error', 'message' => 'Le collaborateur n\'a pas pu être supprimé'];
     }
 
 }

@@ -54,7 +54,7 @@
 </style>
 
 <template>
-    <li class="team-item tile card panel" :data-name="member.full_name">
+    <li class="team-item tile card panel" :data-id="member.id">
         <div class="list-header">
             <div class="card-head col-md-11 collapsed" data-toggle="collapse" :data-parent="accordion_parent" :data-target="'#accordion-' + id">
                 <header>
@@ -131,7 +131,7 @@
                                 <h4>Rôles</h4>
                             </td>
                             <td class="col-md-9 field-value">
-                                <select2 @updateValue="updateRoles" :contents="roles"
+                                <select2 :reload="reload_roles" @updateValue="updateRoles" :contents="roles"
                                          :id="'roles-select-' + id" index="name" :label="false" :val="member.roles"></select2>
                             </td>
                         </tr>
@@ -169,6 +169,7 @@
                 required: true,
                 default: () => {
                     return {
+                        id: 'default',
                         full_name: '',
                         description: '',
                         gender: 0,
@@ -186,7 +187,11 @@
                 default: () => {
                     return []
                 }
-            }
+            },
+            reload_roles: {
+                type: Boolean,
+                default: false
+            },
         },
         methods: {
             ...mapActions(['destroy']),
