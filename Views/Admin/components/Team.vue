@@ -53,7 +53,7 @@
             },
             TeamRoleList: resolve => {
                 require(['./TeamRoleList.vue'], resolve)
-            },
+            }
         },
         data () {
             return {

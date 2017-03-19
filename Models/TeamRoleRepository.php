@@ -2,14 +2,14 @@
 
 namespace Jet\Modules\Team\Models;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Jet\Models\AppRepository;
 
 /**
  * Class TeamRoleRepository
  * @package Jet\Modules\Post\Models
  */
-class TeamRoleRepository extends EntityRepository
+class TeamRoleRepository extends AppRepository
 {
 
 
@@ -67,9 +67,8 @@ class TeamRoleRepository extends EntityRepository
             $query->andWhere($query->expr()->isNull('w.id'));
         }
 
-        if (isset($params['options']) && isset($params['options']['parent_exclude']) && isset($params['options']['parent_exclude']['team_roles']) && !empty($params['options']['parent_exclude']['team_roles'])) {
-            $query->andWhere($query->expr()->notIn('t.id', ':exclude_ids'))
-                ->setParameter('exclude_ids', $params['options']['parent_exclude']['team_roles']);
+        if (isset($params['options'])){
+            $query = $this->excludeData($query, $params['options'], 'team_roles');
         }
 
         return $query;
