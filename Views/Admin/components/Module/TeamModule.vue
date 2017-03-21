@@ -3,6 +3,7 @@
         padding: 10px;
         background: #f2f2f2;
     }
+
 </style>
 
 <template>
@@ -50,7 +51,48 @@
             <template-editor :id="line" :templates="templates" :template="content.template"
                              label="Template du contenu"></template-editor>
             <h5 class="module-title">Configuration avancé :</h5>
-            <select2 @updateValue="updateRoles"
+            <div class="row">
+                <div class="col-md-4 center-align">
+                    <div class="form-group">
+                        <p>Lister les membre dans rôle</p>
+                        <div class="switch">
+                            <label>
+                                Non
+                                <input v-model="content_data.member_in_role" type="checkbox">
+                                <span class="lever"></span>
+                                Oui
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 center-align">
+                    <div class="form-group">
+                        <p>Lister les membres</p>
+                        <div class="switch">
+                            <label>
+                                Non
+                                <input v-model="content_data.member" type="checkbox">
+                                <span class="lever"></span>
+                                Oui
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 center-align">
+                    <div class="form-group">
+                        <p>Lister les rôles</p>
+                        <div class="switch">
+                            <label>
+                                Non
+                                <input v-model="content_data.role" type="checkbox">
+                                <span class="lever"></span>
+                                Oui
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <select2 v-if="roles.length > 0" @updateValue="updateRoles"
                      :contents="roles" :id="'roles-' + line" val_index="id" index="name"
                      label="Choisir les rôles à afficher ou laisser vide pour tout afficher"
                      :val="content_data.roles"></select2>
@@ -74,7 +116,7 @@
     import module_mixin from '@front/mixin/module'
 
     export default{
-        name: 'price',
+        name: 'team',
         components: {
             TemplateEditor: resolve => {
                 require(['@front/components/Helper/TemplateEditor.vue'], resolve)
@@ -106,6 +148,9 @@
                 roles: [],
                 content_data: {
                     class: '',
+                    member_in_role: false,
+                    member: true,
+                    role: false,
                     roles: []
                 }
             }
@@ -129,16 +174,13 @@
                 this.templates = response.data;
             });
             this.read({api: team_role_api.all + this.website}).then((response) => {
-                if(response.data.resource !== undefined)
+                if (response.data.resource !== undefined)
                     this.roles = response.data.resource;
             });
         },
         mounted(){
-            this.$nextTick(function () {
-                let o = this;
-                if (this.content.data.roles !== undefined && this.content.data.roles instanceof Array) this.content_data = this.content.data;
-
-            })
+            if (this.content.data.roles !== undefined && this.content.data.roles instanceof Array)
+                this.content_data = Object.assign({}, this.content_data, this.content.data);
         }
     }
 </script>

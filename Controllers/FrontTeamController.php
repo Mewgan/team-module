@@ -6,6 +6,7 @@ use Jet\FrontBlock\Controllers\MainController;
 use Jet\Models\Content;
 use Jet\Models\Website;
 use Jet\Modules\Team\Models\Team;
+use Jet\Modules\Team\Models\TeamRole;
 
 class FrontTeamController extends MainController
 {
@@ -25,11 +26,13 @@ class FrontTeamController extends MainController
             $params = [
                 'websites' => $this->websites,
                 'options' => $this->getWebsiteData($website),
-                'roles' => isset($data['roles']) ? $data['roles'] : []
+                'roles' => isset($data['roles']) ? $data['roles'] : [],
+                'member_in_role' => (isset($data['member_in_role']) && (string)$data['member_in_role'] == 'true') ? true : false
             ];
 
-            $team = Team::repo()->listAll($params);
-            return $this->_renderContent($content->getTemplate(), 'src/Modules/Team/Views/', compact('team'));
+            $team = (isset($data['member']) && (string)$data['member'] == 'false') ? [] : Team::repo()->listAll($params);
+            $roles = (isset($data['role']) && (string)$data['role'] == 'false') ? [] : TeamRole::repo()->listAll($params);
+            return $this->_renderContent($content->getTemplate(), 'src/Modules/Team/Views/', compact('team', 'roles'));
         }
         return null;
     }

@@ -7,7 +7,7 @@
 
 <script type="text/babel">
     export default{
-        name: 'user-price',
+        name: 'user-team',
         props: {
             line: {
                 default: 'default'

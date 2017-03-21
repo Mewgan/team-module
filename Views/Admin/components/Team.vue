@@ -77,14 +77,15 @@
             },
             loadRoles(){
                 this.read({api: team_role_api.all + this.website_id}).then((response) => {
-                    if (response.data.resource !== undefined)
+                    if (response.data.resource !== undefined) {
                         this.roles = response.data.resource;
+                    }
                 });
             }
         },
         created() {
-            this.loadRoles();
-            this.loadTeam();
+            this.loadRoles()
+            this.loadTeam()
         }
     }
 </script>

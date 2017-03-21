@@ -19,7 +19,7 @@
             <div class="card-head style-primary">
                 <header><i class="fa fa-users"></i> Équipe</header>
                 <div class="tools">
-                    <a @click="save" class="btn btn-default"><i class="fa fa-save"></i> Enregistrer</a>
+                    <a @click="updateOrCreate" class="btn btn-default"><i class="fa fa-save"></i> Enregistrer</a>
                 </div>
             </div>
             <div class="card-body no-padding">
@@ -101,7 +101,7 @@
                 let index = this.team.findIndex((i) => i.id == id);
                 this.team.splice(index, 1);
             },
-            save(){
+            updateOrCreate(){
                 this.update({
                     api: team_api.update_or_create + this.website_id,
                     value: {

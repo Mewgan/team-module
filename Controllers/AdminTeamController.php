@@ -63,10 +63,7 @@ class AdminTeamController extends AdminController
 
                     if(is_null($member)) return ['status' => 'error', 'message' => 'Impossible de trouver l\'équipe'];
 
-                    /** @var Website $member_website */
-                    $member_website = $member->getWebsite();
-
-                    if ($member_website != $website && !is_null($member_website)) {
+                    if ($member->getWebsite() != $website && !is_null($member->getWebsite())) {
                         $data = $this->excludeData($website->getData(), 'teams', $member->getId());
                         $website->setData($data);
                         Website::watch($website);

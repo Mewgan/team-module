@@ -55,6 +55,7 @@
 
 <template>
     <li class="team-item tile card panel" :data-id="member.id">
+
         <div class="list-header">
             <div class="card-head col-md-11 collapsed" data-toggle="collapse" :data-parent="accordion_parent" :data-target="'#accordion-' + id">
                 <header>
@@ -69,9 +70,10 @@
                 </div>
             </div>
             <div class="delete-container col-md-1">
-                <a @click="deleteMember" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                <a data-toggle="modal" :data-target="'#deleteMemberModal' + id" class="btn btn-danger"><i class="fa fa-trash"></i></a>
             </div>
         </div>
+
         <div :id="'accordion-' + id" class="accordion collapse">
             <div class="col-md-12">
                 <form class="form">
@@ -131,7 +133,7 @@
                                 <h4>Rôles</h4>
                             </td>
                             <td class="col-md-9 field-value">
-                                <select2 :reload="reload_roles" @updateValue="updateRoles" :contents="roles"
+                                <select2 v-if="roles.length > 0" :reload="reload_roles" @updateValue="updateRoles" :contents="roles"
                                          :id="'roles-select-' + id" index="name" :label="false" :val="member.roles"></select2>
                             </td>
                         </tr>
@@ -140,6 +142,28 @@
                 </form>
             </div>
         </div>
+
+        <div class="modal fade" :id="'deleteMemberModal' + id" tabindex="-1" role="dialog"
+             aria-labelledby="simpleModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" :id="'deleteMemberModalLabel' + id">Suppression</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Êtes-vous sûr de vouloir supprimer ce membre ?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="modal-btn btn btn-default" data-dismiss="modal">Non</button>
+                        <button type="button" class="modal-btn btn btn-primary" data-dismiss="modal" @click="deleteMember">
+                            Oui
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
     </li>
 </template>
 
@@ -202,7 +226,7 @@
                 this.member.roles = val;
             },
             deleteMember(){
-                if(this.member.id !== undefined){
+                if(this.member.id !== undefined && (typeof this.member.id === 'number' || (typeof this.member.id === 'string' && this.member.id.substring(0,6) !== 'create'))){
                     this.destroy({
                         api: team_api.destroy + this.website_id,
                         ids: [this.member.id]

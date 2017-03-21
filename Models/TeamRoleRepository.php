@@ -27,6 +27,11 @@ class TeamRoleRepository extends AppRepository
 
         $query = $this->getQueryWithParams($query, $params);
 
+        if(isset($params['member_in_role']) && $params['member_in_role'] === true){
+            $query->addSelect('r')
+                ->leftJoin('t.roles', 'r');
+        }
+
         $query->orderBy('t.id', 'DESC');
 
         return $query->getQuery()->getArrayResult();
