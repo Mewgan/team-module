@@ -12,7 +12,6 @@ use Jet\Models\AppRepository;
 class TeamRoleRepository extends AppRepository
 {
 
-
     /**
      * @param array $params
      * @return array
@@ -21,18 +20,20 @@ class TeamRoleRepository extends AppRepository
     {
         $query = TeamRole::queryBuilder();
 
-        $query->select('t')
-            ->from('Jet\Modules\Team\Models\TeamRole', 't')
-            ->leftJoin('t.website', 'w');
+        $query->select('r')
+            ->from('Jet\Modules\Team\Models\TeamRole', 'r')
+            ->leftJoin('r.website', 'w');
 
         $query = $this->getQueryWithParams($query, $params);
 
         if(isset($params['member_in_role']) && $params['member_in_role'] === true){
-            $query->addSelect('r')
-                ->leftJoin('t.roles', 'r');
+            $query->addSelect('t')
+                ->leftJoin('r.teams', 't');
+
+            $query = $this->excludeData($query, $params['options'], 'teams');
         }
 
-        $query->orderBy('t.id', 'DESC');
+        $query->orderBy('r.id', 'DESC');
 
         return $query->getQuery()->getArrayResult();
     }
@@ -44,11 +45,11 @@ class TeamRoleRepository extends AppRepository
     public function findById($ids)
     {
         $query = TeamRole::queryBuilder()
-            ->select('partial t.{id}')
+            ->select('partial r.{id}')
             ->addSelect('partial w.{id}')
-            ->from('Jet\Modules\Team\Models\TeamRole', 't')
-            ->leftJoin('t.website', 'w');
-        return $query->where($query->expr()->in('t.id', ':ids'))
+            ->from('Jet\Modules\Team\Models\TeamRole', 'r')
+            ->leftJoin('r.website', 'w');
+        return $query->where($query->expr()->in('r.id', ':ids'))
             ->setParameter('ids', $ids)
             ->getQuery()->getArrayResult();
     }
@@ -73,7 +74,7 @@ class TeamRoleRepository extends AppRepository
         }
 
         if (isset($params['options'])){
-            $query = $this->excludeData($query, $params['options'], 'team_roles');
+            $query = $this->excludeData($query, $params['options'], 'team_roles', 'r');
         }
 
         return $query;

@@ -59,7 +59,7 @@
         <div class="list-header">
             <div class="card-head col-md-11 collapsed" data-toggle="collapse" :data-parent="accordion_parent" :data-target="'#accordion-' + id">
                 <header>
-                    <div class="tile-icon member-photo">
+                    <div v-if="member.photo != null" class="tile-icon member-photo">
                         <i class="fa drag-arrows fa-arrows"></i>
                         <img v-img="member.photo.path" :alt="member.photo.alt">
                     </div>
@@ -95,7 +95,7 @@
                                 <h4>Photo</h4>
                             </td>
                             <td class="col-md-9 field-value">
-                                <div class="member-photo-container">
+                                <div v-if="member.photo != null" class="member-photo-container">
                                     <img v-img="member.photo.path" :alt="member.photo.alt">
                                 </div>
                                 <media :id="'member-' + id" :target="member" :input_target="member.photo"></media>
@@ -133,7 +133,7 @@
                                 <h4>Rôles</h4>
                             </td>
                             <td class="col-md-9 field-value">
-                                <select2 v-if="roles.length > 0" :reload="reload_roles" @updateValue="updateRoles" :contents="roles"
+                                <select2 v-if="roles.length > 0 && launch_select2" :reload="reload_roles" @updateValue="updateRoles" :contents="roles"
                                          :id="'roles-select-' + id" index="name" :label="false" :val="member.roles"></select2>
                             </td>
                         </tr>
@@ -217,6 +217,11 @@
                 default: false
             },
         },
+        data(){
+            return {
+                launch_select2: false
+            }
+        },
         methods: {
             ...mapActions(['destroy']),
             updateContent(val) {
@@ -240,6 +245,7 @@
             }
         },
         mounted () {
+            this.launch_select2 = true;
             let ids = [];
             this.member.roles.forEach((role) => {
                 ids.push(role.id);
