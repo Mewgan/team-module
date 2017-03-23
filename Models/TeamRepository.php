@@ -76,6 +76,7 @@ class TeamRepository extends AppRepository
         
         if (isset($params['options'])){
             $query = $this->excludeData($query, $params['options'], 'teams');
+            $query = $this->excludeData($query, $params['options'], 'team_roles', 'r');
         }
 
         return $query;
