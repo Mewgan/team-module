@@ -175,9 +175,15 @@
     export default{
         name: 'member',
         components: {
-            Media: resolve => { require(['@front/components/Helper/Media.vue'], resolve) },
-            TinymceEditor: resolve => { require(['@front/components/Helper/TinymceEditor.vue'], resolve) },
-            Select2: resolve => { require(['@front/components/Helper/Select2.vue'], resolve) }
+            Media: resolve => {
+                require(['@front/components/Helper/Media.vue'], resolve)
+            },
+            TinymceEditor: resolve => {
+                require(['@front/components/Helper/TinymceEditor.vue'], resolve)
+            },
+            Select2: resolve => {
+                require(['@front/components/Helper/Select2.vue'], resolve)
+            }
         },
         props: {
             accordion_parent: {
@@ -231,7 +237,7 @@
                 this.member.roles = val;
             },
             deleteMember(){
-                if(this.member.id !== undefined && (typeof this.member.id === 'number' || (typeof this.member.id === 'string' && this.member.id.substring(0,6) !== 'create'))){
+                if (this.member.id !== undefined && (typeof this.member.id === 'number' || (typeof this.member.id === 'string' && this.member.id.substring(0, 6) !== 'create'))) {
                     this.destroy({
                         api: team_api.destroy + this.website_id,
                         ids: [this.member.id]
@@ -239,7 +245,7 @@
                         if (response.data.status == 'success')
                             this.$emit('memberDeleted', this.member.id);
                     });
-                }else{
+                } else {
                     this.$emit('memberDeleted', this.member.id);
                 }
             }
@@ -247,6 +253,11 @@
         mounted () {
             this.launch_select2 = true;
             let ids = [];
+            if(this.member.roles instanceof Object){
+                this.member.roles = $.map(this.member.roles, (value) => {
+                    return [value];
+                })
+            }
             this.member.roles.forEach((role) => {
                 ids.push(role.id);
             });

@@ -20,7 +20,7 @@ class TeamRoleRepository extends AppRepository
     {
         $query = TeamRole::queryBuilder();
 
-        $query->select('r')
+        $query->select('partial r.{id, slug, name}')
             ->from('Jet\Modules\Team\Models\TeamRole', 'r')
             ->leftJoin('r.website', 'w');
 

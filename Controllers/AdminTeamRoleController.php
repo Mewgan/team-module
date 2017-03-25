@@ -95,8 +95,6 @@ class AdminTeamRoleController extends AdminController
             $role = TeamRole::findOneById($id);
             if (is_null($role)) return ['status' => 'error', 'message' => 'Impossible de trouver le rôle'];
 
-            $old_role = $role;
-
             if (is_null($role->getWebsite()) || $role->getWebsite()->getId() != $website->getId()) {
                 $data = $this->excludeData($website->getData(), 'team_roles', $role->getId());
                 $website->setData($data);
@@ -112,7 +110,6 @@ class AdminTeamRoleController extends AdminController
 
             if (TeamRole::watchAndSave($role)) {
                 if ($replace) {
-                    $this->reassignTeam($old_role, $role, $website);
                     $website = $role->getWebsite();
                     $data = $this->replaceData($website->getData(), 'team_roles', $id, $role->getId());
                     $website->setData($data);
@@ -123,47 +120,6 @@ class AdminTeamRoleController extends AdminController
                 return ['status' => 'error', 'message' => 'Erreur lors de la mise à jour'];
         }
         return ['status' => 'error', 'message' => 'Requête non autorisée'];
-    }
-
-    /**
-     * @param TeamRole $old_role
-     * @param TeamRole $role
-     * @param Website $website
-     */
-    private function reassignTeam(TeamRole $old_role, TeamRole $role, Website $website)
-    {
-        $data = $website->getData();
-        $this->getWebsite($website);
-        $teams = $old_role->getTeams();
-        /** @var Team $member */
-        foreach ($teams as $member) {
-            if (in_array($member->getWebsite()->getId(), $this->websites)) {
-                /** @var Team $member */
-                if ($member->getWebsite() != $website) {
-                    /** @var Team $new_team */
-                    $new_member = new Team;
-                    $new_member->setFullName($member->getFullName());
-                    $new_member->setPhoto($member->getPhoto());
-                    $new_member->setDescription($member->getDescription());
-                    $new_member->setGender($member->getGender());
-                    $new_member->setPosition($member->getPosition());
-                    $new_member->removeRole($old_role);
-                    $new_member->addRole($role);
-                    $new_member->setWebsite($website);
-
-                    $data = $this->excludeData($data, 'teams', $member->getId());
-                    $data = $this->replaceData($data, 'teams', $member->getId(), $new_member->getId());
-
-                    Team::watch($new_member);
-                } else {
-                    $member->removeRole($old_role);
-                    $member->addRole($role);
-                    Team::watch($member);
-                }
-            }
-        }
-        $website->setData($data);
-        Website::watch($website);
     }
 
     /**

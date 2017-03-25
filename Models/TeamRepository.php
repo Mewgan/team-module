@@ -30,14 +30,9 @@ class TeamRepository extends AppRepository
 
         $query = $this->getQueryWithParams($query, $params);
 
-        if(isset($params['roles']) && !empty($params['roles'])){
-            $query->andWhere($query->expr()->in('r.id', ':roles'))
-                ->setParameter('roles', $params['roles']);
-        }
-
         $query->orderBy('t.position', 'ASC');
 
-        return $query->getQuery()->getArrayResult();
+        return $this->reassignRoles($query->getQuery()->getArrayResult(), $params);
     }
 
     /**
@@ -54,6 +49,33 @@ class TeamRepository extends AppRepository
         return $query->where($query->expr()->in('t.id', ':ids'))
             ->setParameter('ids', $ids)
             ->getQuery()->getArrayResult();
+    }
+
+    /**
+     * @param array $data
+     * @param array $params
+     * @return array
+     */
+    private function reassignRoles($data = [], $params = [])
+    {
+        $roles = TeamRole::repo()->listAll($params);
+        $exclude_ids = isset($params['options']['parent_exclude']['team_roles']) ? array_flip($params['options']['parent_exclude']['team_roles']) : [];
+        foreach ($data as $i => $member) {
+            if (isset($member['roles']) && is_array($member['roles'])) {
+                foreach ($member['roles'] as $y => $role) {
+                    if (isset($exclude_ids[$role['id']])) {
+                        unset($data[$i]['roles'][$y]);
+                    }
+                    if (isset($params['options']['parent_replace']['team_roles'][$role['id']])) {
+                        $index = findIndex($roles, 'id', $params['options']['parent_replace']['team_roles'][$role['id']]);
+                        if ($index !== false) {
+                            $data[$i]['roles'][$y] = $roles[$index];
+                        }
+                    }
+                }
+            }
+        }
+        return $data;
     }
 
     /**
@@ -76,7 +98,11 @@ class TeamRepository extends AppRepository
         
         if (isset($params['options'])){
             $query = $this->excludeData($query, $params['options'], 'teams');
-            $query = $this->excludeData($query, $params['options'], 'team_roles', 'r');
+        }
+
+        if(isset($params['roles']) && !empty($params['roles'])){
+            $query->andWhere($query->expr()->in('r.id', ':roles'))
+                ->setParameter('roles', $params['roles']);
         }
 
         return $query;
