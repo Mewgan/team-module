@@ -133,8 +133,15 @@
                     this.update({
                         api: team_role_api.update + this.role.id + '/' + this.website_id,
                         value: this.role
-                    }).then(() => {
-                        this.$emit('reloadTeam');
+                    }).then((response) => {
+                        if (response.data.resource !== undefined){
+                            let index = this.roles.findIndex((i) => i.id == this.role.id);
+                            this.roles[index] = response.data.resource;
+                            if(response.data.resource.id != this.role.id) {
+                                this.role = response.data.resource;
+                            }
+                            this.$emit('reloadTeam');
+                        }
                     })
                 } else {
                     this.create({

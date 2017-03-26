@@ -1,29 +1,37 @@
 <style>
-    .team-item{
+    .team-item {
         margin: 10px 0 !important;
     }
-    .team-item .list-header .card-head{
+
+    .team-item .list-header .card-head {
         display: inline-block;
     }
-    .team-item .list-header .card-head .tools{
+
+    .team-item .list-header .card-head .tools {
         padding: 5px 24px;
     }
-    .team-item .list-header .delete-container{
+
+    .team-item .list-header .delete-container {
         padding-top: 14px;
     }
-    .team-item .drag-arrows{
+
+    .team-item .drag-arrows {
         margin-right: 15px;
         cursor: move;
     }
-    .team-item .member-photo{
+
+    .team-item .member-photo {
         display: initial;
     }
-    .team-item header span{
+
+    .team-item header span {
         margin-left: 10px;
     }
-    .team-item form .media-button{
+
+    .team-item form .media-button {
         width: 100%;
     }
+
     .team-item form .member-photo-container {
         height: 100px !important;
         cursor: pointer;
@@ -32,6 +40,7 @@
         position: relative;
         background: #c2bfbf;
     }
+
     .team-item form .member-photo-container img {
         max-height: 100%;
         max-width: 100%;
@@ -44,11 +53,13 @@
         right: 0;
         margin: auto;
     }
-    .team-item form .radio-inline{
+
+    .team-item form .radio-inline {
         display: inline-block !important;
         margin-right: 10px;
     }
-    .team-item form .radio-inline span{
+
+    .team-item form .radio-inline span {
         padding-left: 30px !important;
     }
 </style>
@@ -57,7 +68,7 @@
     <li class="team-item tile card panel" :data-id="member.id">
 
         <div class="list-header">
-            <div class="card-head col-md-11 collapsed" data-toggle="collapse" :data-parent="accordion_parent" :data-target="'#accordion-' + id">
+            <div class="card-head col-md-10 collapsed">
                 <header>
                     <div v-if="member.photo != null" class="tile-icon member-photo">
                         <i class="fa drag-arrows fa-arrows"></i>
@@ -65,12 +76,12 @@
                     </div>
                     <span> {{member.full_name}}</span>
                 </header>
-                <div class="tools">
-                    <a class="btn btn-info"><i class="fa fa-pencil"></i></a>
-                </div>
             </div>
-            <div class="delete-container col-md-1">
-                <a data-toggle="modal" :data-target="'#deleteMemberModal' + id" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+            <div class="delete-container col-md-2">
+                <a class="btn btn-info" data-toggle="collapse" :data-parent="accordion_parent"
+                   :data-target="'#accordion-' + id"><i class="fa fa-pencil"></i></a>
+                <a data-toggle="modal" :data-target="'#deleteMemberModal' + id" class="btn btn-danger"><i
+                        class="fa fa-trash"></i></a>
             </div>
         </div>
 
@@ -85,7 +96,8 @@
                             </td>
                             <td class="col-md-9 field-value">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="member-fullname" v-model="member.full_name">
+                                    <input type="text" class="form-control" id="member-fullname"
+                                           v-model="member.full_name">
                                     <label for="member-fullname">Nom</label>
                                 </div>
                             </td>
@@ -133,8 +145,10 @@
                                 <h4>Rôles</h4>
                             </td>
                             <td class="col-md-9 field-value">
-                                <select2 v-if="roles.length > 0 && launch_select2" :reload="reload_roles" @updateValue="updateRoles" :contents="roles"
-                                         :id="'roles-select-' + id" index="name" :label="false" :val="member.roles"></select2>
+                                <select2 v-if="roles.length > 0" :reload="reload_roles"
+                                         @updateValue="updateRoles" :contents="roles"
+                                         :id="'roles-select-' + id" index="name" :label="false"
+                                         :val="member.roles"></select2>
                             </td>
                         </tr>
                         </tbody>
@@ -156,7 +170,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="modal-btn btn btn-default" data-dismiss="modal">Non</button>
-                        <button type="button" class="modal-btn btn btn-primary" data-dismiss="modal" @click="deleteMember">
+                        <button type="button" class="modal-btn btn btn-primary" data-dismiss="modal"
+                                @click="deleteMember">
                             Oui
                         </button>
                     </div>
@@ -221,11 +236,6 @@
             reload_roles: {
                 type: Boolean,
                 default: false
-            },
-        },
-        data(){
-            return {
-                launch_select2: false
             }
         },
         methods: {
@@ -249,19 +259,6 @@
                     this.$emit('memberDeleted', this.member.id);
                 }
             }
-        },
-        mounted () {
-            this.launch_select2 = true;
-            let ids = [];
-            if(this.member.roles instanceof Object){
-                this.member.roles = $.map(this.member.roles, (value) => {
-                    return [value];
-                })
-            }
-            this.member.roles.forEach((role) => {
-                ids.push(role.id);
-            });
-            this.member.roles = ids;
         }
     }
 </script>

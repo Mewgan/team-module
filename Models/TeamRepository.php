@@ -26,11 +26,10 @@ class TeamRepository extends AppRepository
             ->from('Jet\Modules\Team\Models\Team', 't')
             ->leftJoin('t.roles', 'r')
             ->leftJoin('t.photo', 'p')
-            ->leftJoin('t.website', 'w');
+            ->leftJoin('t.website', 'w')
+            ->orderBy('t.position', 'ASC');
 
         $query = $this->getQueryWithParams($query, $params);
-
-        $query->orderBy('t.position', 'ASC');
 
         return $this->reassignRoles($query->getQuery()->getArrayResult(), $params);
     }
@@ -58,10 +57,23 @@ class TeamRepository extends AppRepository
      */
     private function reassignRoles($data = [], $params = [])
     {
-        $roles = TeamRole::repo()->listAll($params);
+        $roles = TeamRole::repo()->listAll(['websites' => $params['websites']]);
         $exclude_ids = isset($params['options']['parent_exclude']['team_roles']) ? array_flip($params['options']['parent_exclude']['team_roles']) : [];
+        $in_cat = null;
+        if (isset($params['roles']) && is_array($params['roles']) && !empty($params['roles'])) {
+            foreach ($params['roles'] as $k => $role) {
+                if (isset($exclude_ids[$role])) {
+                    unset($params['roles'][$k]);
+                }
+                if (isset($params['options']['parent_replace']['team_roles'][$role])) {
+                    $params['roles'][$k] = $params['options']['parent_replace']['team_roles'][$role];
+                }
+            }
+            $in_cat = array_flip($params['roles']);
+        }
         foreach ($data as $i => $member) {
-            if (isset($member['roles']) && is_array($member['roles'])) {
+            $remove_item = true;
+            if (isset($member['roles']) && is_array($member['roles']) && !empty($member['roles'])) {
                 foreach ($member['roles'] as $y => $role) {
                     if (isset($exclude_ids[$role['id']])) {
                         unset($data[$i]['roles'][$y]);
@@ -72,7 +84,13 @@ class TeamRepository extends AppRepository
                             $data[$i]['roles'][$y] = $roles[$index];
                         }
                     }
+                    if (is_null($in_cat) || (isset($data[$i]['roles'][$y]['id']) && isset($in_cat[$data[$i]['roles'][$y]['id']]))){
+                        $remove_item = false;
+                    }
                 }
+            }
+            if($remove_item === true){
+                unset($data[$i]);
             }
         }
         return $data;
@@ -95,16 +113,11 @@ class TeamRepository extends AppRepository
         } else {
             $query->andWhere($query->expr()->isNull('w.id'));
         }
-        
-        if (isset($params['options'])){
-            $query = $this->excludeData($query, $params['options'], 'teams');
-        }
 
-        if(isset($params['roles']) && !empty($params['roles'])){
-            $query->andWhere($query->expr()->in('r.id', ':roles'))
-                ->setParameter('roles', $params['roles']);
+        if (isset($params['options'])) {
+            $query = $this->excludeData($query, $params['options'], 'teams');
         }
 
         return $query;
     }
-} 
+}

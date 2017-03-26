@@ -66,12 +66,26 @@
         methods: {
             ...mapActions(['read']),
             reloadTeam(){
-                this.reload_roles = !this.reload_roles;
+                this.loadTeam().then(() => {
+                    this.reload_roles = !this.reload_roles;
+                });
             },
             loadTeam(){
-                this.read({api: team_api.all + this.website_id}).then((response) => {
+                return this.read({api: team_api.all + this.website_id}).then((response) => {
                     if (response.data.resource !== undefined) {
                         this.team = response.data.resource;
+                        this.team.forEach((member, index) => {
+                            let ids = [];
+                            if(member.roles instanceof Object){
+                                this.team[index].roles = $.map(member.roles, (value) => {
+                                    return [value];
+                                })
+                            }
+                            this.team[index].roles.forEach((role) => {
+                                ids.push(role.id);
+                            });
+                            this.team[index].roles = ids;
+                        })
                     }
                 })
             },
@@ -84,8 +98,8 @@
             }
         },
         created() {
-            this.loadRoles()
-            this.loadTeam()
+            this.loadRoles();
+            this.loadTeam();
         }
     }
 </script>

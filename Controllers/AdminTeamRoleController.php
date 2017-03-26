@@ -115,7 +115,7 @@ class AdminTeamRoleController extends AdminController
                     $website->setData($data);
                     Website::watchAndSave($website);
                 }
-                return ['status' => 'success', 'message' => 'Le rôle a bien été mis à jour'];
+                return ['status' => 'success', 'message' => 'Le rôle a bien été mis à jour', 'resource' => $role];
             } else
                 return ['status' => 'error', 'message' => 'Erreur lors de la mise à jour'];
         }
