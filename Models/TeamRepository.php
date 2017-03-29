@@ -72,8 +72,8 @@ class TeamRepository extends AppRepository
             $in_cat = array_flip($params['roles']);
         }
         foreach ($data as $i => $member) {
-            $remove_item = true;
             if (isset($member['roles']) && is_array($member['roles']) && !empty($member['roles'])) {
+                $remove_item = true;
                 foreach ($member['roles'] as $y => $role) {
                     if (isset($exclude_ids[$role['id']])) {
                         unset($data[$i]['roles'][$y]);
@@ -88,9 +88,9 @@ class TeamRepository extends AppRepository
                         $remove_item = false;
                     }
                 }
-            }
-            if($remove_item === true){
-                unset($data[$i]);
+                if($remove_item === true){
+                    unset($data[$i]);
+                }
             }
         }
         return $data;
