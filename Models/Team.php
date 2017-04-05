@@ -38,7 +38,7 @@ class Team extends Model implements \JsonSerializable
     /**
      * @Column(type="text", nullable=true)
      */
-    protected $description;
+    protected $description = '';
     /**
      * @ManyToOne(targetEntity="Jet\Models\Media")
      * @JoinColumn(name="photo_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")

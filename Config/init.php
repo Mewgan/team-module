@@ -11,5 +11,8 @@ return [
                 'prefix' => 'admin',
             ],
         ],
-    ],
+        'fixtures' => [
+            'src/Modules/Team/Fixtures/'
+        ]
+    ]
 ];
