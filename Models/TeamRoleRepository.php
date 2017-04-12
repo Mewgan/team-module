@@ -121,6 +121,12 @@ class TeamRoleRepository extends AppRepository
                 ->leftJoin('r.teams', 't')
                 ->addOrderBy('t.position', 'ASC');
 
+            if (isset($params['websites'])) {
+                $query->leftJoin('t.website', 'tw')
+                    ->andWhere($query->expr()->in('tw.id', ':websites'));
+            }
+
+
             if (isset($params['options']['parent_exclude']['team_roles'])) {
                 $params['exclude_roles'] = $params['options']['parent_exclude']['team_roles'];
                 unset($params['options']['parent_exclude']['team_roles']);
