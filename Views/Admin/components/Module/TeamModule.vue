@@ -48,7 +48,7 @@
                 </div>
             </div>
             <h5 class="module-title">Choix du template :</h5>
-            <template-editor :id="line" :templates="templates" :template="content.template"
+            <template-editor @updateTemplate="updateTemplate" :id="line" :templates="templates" :template="content.template"
                              label="Template du contenu"></template-editor>
             <h5 class="module-title">Configuration avancé :</h5>
             <div class="row">
@@ -167,6 +167,9 @@
             ...mapActions(['read', 'setResponse']),
             updateRoles(val){
                 this.content.data.roles = val;
+            },
+            updateTemplate(template){
+                if (this.content.template !== undefined) this.content.template = template;
             }
         },
         created () {

@@ -78,7 +78,7 @@
                 </header>
             </div>
             <div class="delete-container col-md-2">
-                <a class="btn btn-info" data-toggle="collapse" :data-parent="accordion_parent"
+                <a @click="openAccordion" class="btn btn-info" data-toggle="collapse" :data-parent="accordion_parent"
                    :data-target="'#accordion-' + id"><i class="fa fa-pencil"></i></a>
                 <a data-toggle="modal" :data-target="'#deleteMemberModal' + id" class="btn btn-danger"><i
                         class="fa fa-trash"></i></a>
@@ -86,7 +86,7 @@
         </div>
 
         <div :id="'accordion-' + id" class="accordion collapse">
-            <div class="col-md-12">
+            <div v-if="accordion" class="col-md-12">
                 <form class="form">
                     <table class="table table-banded no-margin">
                         <tbody>
@@ -119,6 +119,7 @@
                             </td>
                             <td class="col-md-9 field-value">
                                 <div class="from-group">
+                                    <!--<textarea v-model="member.description" placeholder="Description du membre ..." class="form-control"></textarea>-->
                                     <tinymce-editor @updateContent="updateContent" :height="200"
                                                     :id="'member-description-' + id"
                                                     :value="member.description"></tinymce-editor>
@@ -238,8 +239,16 @@
                 default: false
             }
         },
+        data(){
+            return {
+                accordion: false
+            }
+        },
         methods: {
             ...mapActions(['destroy']),
+            openAccordion(){
+                this.accordion = true;
+            },
             updateContent(val) {
                 this.member.description = val;
             },
