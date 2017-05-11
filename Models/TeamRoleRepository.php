@@ -77,7 +77,7 @@ class TeamRoleRepository extends AppRepository
                 }
             }
         }
-        return $data;
+        return array_values($data);
     }
 
 

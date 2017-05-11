@@ -17,11 +17,11 @@
                         <a class="tile-content ink-reaction">
                             <div class="tile-text">{{ role.name }}</div>
                         </a>
-                        <a @click="selectRole(role)" data-toggle="modal" data-target="#editTeamRoleModal"
+                        <a @click="selectRole(role)" title="Modifier le rôle" data-toggle="modal" data-target="#editTeamRoleModal"
                            class="btn btn-flat">
                             <i class="fa fa-pencil"></i>
                         </a>
-                        <a @click="selectRole(role)" data-toggle="modal" data-target="#deleteTeamRoleModal"
+                        <a @click="selectRole(role)" title="Supprimer le rôle" data-toggle="modal" data-target="#deleteTeamRoleModal"
                            class="btn btn-flat ink-reaction">
                             <i class="fa fa-trash"></i>
                         </a>
@@ -31,7 +31,7 @@
         </div><!--end .card -->
 
         <button data-toggle="modal" @click="clearRole" data-target="#editTeamRoleModal"
-                class="btn ink-reaction btn-raised btn-lg btn-info pull-right">
+                class="btn ink-reaction btn-raised btn-primary pull-right">
             <i class="fa fa-plus" aria-hidden="true"></i>
             Ajouter un rôle
         </button>

@@ -34,8 +34,8 @@
 
     .team-item form .member-photo-container {
         height: 100px !important;
-        cursor: pointer;
         margin: 10px;
+        cursor: pointer;
         overflow: hidden;
         position: relative;
         background: #c2bfbf;
@@ -78,14 +78,16 @@
                 </header>
             </div>
             <div class="delete-container col-md-2">
-                <a @click="openAccordion" class="btn btn-info" data-toggle="collapse" :data-parent="accordion_parent"
-                   :data-target="'#accordion-' + id"><i class="fa fa-pencil"></i></a>
-                <a data-toggle="modal" :data-target="'#deleteMemberModal' + id" class="btn btn-danger"><i
+                <a @click="openAccordion" class="btn btn-default collapsed" title="Modifier les informations de ce collaborateur" data-toggle="collapse" :data-parent="accordion_parent"
+                   :data-target="'#accordion-' + id" aria-expanded="false">
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <a data-toggle="modal" title="Supprimer ce collaborateur" :data-target="'#deleteMemberModal' + id" class="btn btn-default"><i
                         class="fa fa-trash"></i></a>
             </div>
         </div>
 
-        <div :id="'accordion-' + id" class="accordion collapse">
+        <div :id="'accordion-' + id" class="accordion collapse" aria-expanded="false">
             <div v-if="accordion" class="col-md-12">
                 <form class="form">
                     <table class="table table-banded no-margin">
@@ -107,10 +109,10 @@
                                 <h4>Photo</h4>
                             </td>
                             <td class="col-md-9 field-value">
-                                <div v-if="member.photo != null" class="member-photo-container">
+                                <div v-if="member.photo != null" @click="launchMedia" data-toggle="modal" :data-target="'#mediaLibrarymember-' + id" class="member-photo-container">
                                     <img v-img="member.photo.path" :alt="member.photo.alt">
                                 </div>
-                                <media :id="'member-' + id" :target="member" :input_target="member.photo"></media>
+                                <media :id="'member-' + id" label="Choisir une photo" :launch_media="launch_media" :target="member" :input_target="member.photo"></media>
                             </td>
                         </tr>
                         <tr>
@@ -241,13 +243,17 @@
         },
         data(){
             return {
-                accordion: false
+                accordion: false,
+                launch_media: false
             }
         },
         methods: {
             ...mapActions(['destroy']),
             openAccordion(){
                 this.accordion = true;
+            },
+            launchMedia(){
+                this.launch_media = !this.launch_media;
             },
             updateContent(val) {
                 this.member.description = val;

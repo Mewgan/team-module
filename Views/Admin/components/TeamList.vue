@@ -31,7 +31,7 @@
                                 :website_id="website_id"></member>
                     </ul>
                     <button data-toggle="modal" @click="addMember"
-                            class="btn ink-reaction btn-raised btn-lg btn-info pull-right">
+                            class="btn ink-reaction btn-raised btn-primary pull-right">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Ajouter un collaborateur
                     </button>
@@ -46,8 +46,6 @@
 
 
 <script type="text/babel">
-
-    import '@admin/libs/jquery-ui/jquery-ui.min'
 
     import {mapActions} from 'vuex'
     import {team_api} from '../api'
