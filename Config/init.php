@@ -3,6 +3,12 @@
 return [
 
     'app' => [
+        'Team' => [
+            'order' => 3,
+            'hook' => [
+                'left_sidebar' => true
+            ]
+        ],
         'blocks' => [
             'TeamModule' => [
                 'path' => 'src/Modules/Team/',

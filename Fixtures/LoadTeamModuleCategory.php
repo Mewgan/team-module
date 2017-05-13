@@ -13,7 +13,6 @@ class LoadTeamModuleCategory extends AbstractFixture
         'name' => 'Team',
         'title' => 'Équipe',
         'slug' => 'team',
-        'nav' => true,
         'description' => 'Module pour gérer vos équipes',
         'icon' => 'fa fa-users',
         'author' => 'S.Sumugan',
