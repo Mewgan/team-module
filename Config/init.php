@@ -7,6 +7,12 @@ return [
             'order' => 3,
             'hook' => [
                 'left_sidebar' => true
+            ],
+            'routes' => [
+                [
+                    'title' => 'Équipe',
+                    'name'=> 'module:team',
+                ]
             ]
         ],
         'blocks' => [
