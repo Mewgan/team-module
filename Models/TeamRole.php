@@ -41,11 +41,11 @@ class TeamRole extends Model implements \JsonSerializable
     /**
      * @Column(type="datetime")
      */
-    protected $created_at;
+    public $created_at;
     /**
      * @Column(type="datetime", nullable=true)
      */
-    protected $updated_at;
+    public $updated_at;
 
     /**
      * TeamRole constructor.
