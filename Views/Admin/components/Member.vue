@@ -78,11 +78,11 @@
                 </header>
             </div>
             <div class="delete-container col-md-2">
-                <a @click="openAccordion" class="btn btn-default collapsed" title="Modifier les informations de ce collaborateur" data-toggle="collapse" :data-parent="accordion_parent"
+                <a @click="openAccordion" class="btn btn-default-bright collapsed" title="Modifier les informations de ce collaborateur" data-toggle="collapse" :data-parent="accordion_parent"
                    :data-target="'#accordion-' + id" aria-expanded="false">
                     <i class="fa fa-angle-down"></i>
                 </a>
-                <a data-toggle="modal" title="Supprimer ce collaborateur" :data-target="'#deleteMemberModal' + id" class="btn btn-default"><i
+                <a data-toggle="modal" title="Supprimer ce collaborateur" :data-target="'#deleteMemberModal' + id" class="btn btn-default-bright"><i
                         class="fa fa-trash"></i></a>
             </div>
         </div>

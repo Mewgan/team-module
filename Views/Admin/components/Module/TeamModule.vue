@@ -169,7 +169,9 @@
                 this.content.data.roles = val;
             },
             updateTemplate(template){
-                if (this.content.template !== undefined) this.content.template = template;
+                if (this.content.template !== undefined) {
+                    this.content.template = template;
+                }
             }
         },
         created () {
@@ -177,13 +179,15 @@
                 this.templates = response.data;
             });
             this.read({api: team_role_api.all + this.website}).then((response) => {
-                if (response.data.resource !== undefined)
+                if (response.data.resource !== undefined) {
                     this.roles = response.data.resource;
+                }
             });
         },
         mounted(){
-            if (this.content.data.roles !== undefined && this.content.data.roles instanceof Array)
+            if (this.content.data.roles !== undefined && this.content.data.roles instanceof Array) {
                 this.content_data = Object.assign({}, this.content_data, this.content.data);
+            }
         }
     }
 </script>

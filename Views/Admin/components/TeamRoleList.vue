@@ -31,7 +31,7 @@
         </div><!--end .card -->
 
         <button data-toggle="modal" @click="clearRole" data-target="#editTeamRoleModal"
-                class="btn ink-reaction btn-raised btn-primary pull-right">
+                class="btn btn-primary pull-right">
             <i class="fa fa-plus" aria-hidden="true"></i>
             Ajouter un rôle
         </button>

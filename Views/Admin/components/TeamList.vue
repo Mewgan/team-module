@@ -19,7 +19,7 @@
             <div class="card-head style-primary">
                 <header><i class="fa fa-users"></i> Équipe</header>
                 <div class="tools">
-                    <a @click="updateOrCreate" class="btn btn-default"><i class="fa fa-save"></i> Enregistrer</a>
+                    <a @click="updateOrCreate" class="btn btn-default-bright"><i class="fa fa-save"></i> Enregistrer</a>
                 </div>
             </div>
             <div class="card-body no-padding">
@@ -31,7 +31,7 @@
                                 :website_id="website_id"></member>
                     </ul>
                     <button data-toggle="modal" @click="addMember"
-                            class="btn ink-reaction btn-raised btn-primary pull-right">
+                            class="btn btn-primary pull-right">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Ajouter un collaborateur
                     </button>

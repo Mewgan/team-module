@@ -5,7 +5,7 @@ export var routes = [
         component: resolve => {
             require(['./components/Team.vue'], resolve)
         }
-    },
+    }
 ];
 
 export var content_routes = {
